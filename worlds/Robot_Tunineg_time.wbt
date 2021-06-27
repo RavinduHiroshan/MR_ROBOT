@@ -3,8 +3,8 @@ WorldInfo {
   coordinateSystem "NUE"
 }
 Viewpoint {
-  orientation 0.0626354854053506 -0.9848141092994386 -0.16191962849756597 3.8695574890168856
-  position -3.4713524370347613 0.33866898392008665 -0.227397065192407
+  orientation -0.21975427067469483 0.9440499820003478 0.24592212589634127 1.7400633225279842
+  position 0.9397197882863298 0.7785393547237669 0.6324468476795386
 }
 TexturedBackground {
 }
@@ -14,7 +14,7 @@ RectangleArena {
   floorSize 10 2
 }
 DEF Arena Solid {
-  translation 0 0 -0.17
+  translation 0 0 0.03
   children [
     DEF Big_Track_V2 Solid {
       translation 0 -0.005 0
@@ -206,32 +206,9 @@ DEF Arena Solid {
   boundingObject USE Floor_X
 }
 Robot {
-  translation -4.3651 0.108218 0.761185
-  rotation 0.02897408060627241 -0.0013107937830557923 0.9995793037436697 0.027513217782742863
+  translation -0.960126033068188 0.03411719013328743 0.12649496870050805
+  rotation 0.02896185834772379 -0.001029138334020566 0.9995799876124651 0.02751073120723415
   children [
-    Solid {
-      name "solid(1)"
-      boundingObject Transform {
-        translation -0.09 0.05 0.04
-        children [
-          Box {
-            size 0.12 0.04 0.04
-          }
-        ]
-      }
-    }
-    Solid {
-      translation 0 0 0.14
-      name "solid(2)"
-      boundingObject Transform {
-        translation -0.09 0.05 0.04
-        children [
-          Box {
-            size 0.12 0.04 0.04
-          }
-        ]
-      }
-    }
     DEF Sensor_Array Transform {
       translation 0.07 0.01 0.11
       rotation 0 1 0 -1.5708003061004252
@@ -418,8 +395,9 @@ Robot {
     }
     HingeJoint {
       jointParameters HingeJointParameters {
+        position 2.8659365049339087e-06
         axis 0 0 -1
-        anchor 0 0 0.225
+        anchor 0 0 0.230001
       }
       device [
         RotationalMotor {
@@ -428,11 +406,11 @@ Robot {
         }
       ]
       endPoint Solid {
-        translation 0 0 0.225
-        rotation 0 0 -1 0
+        translation 0 0 0.230001
+        rotation 0 0 -1 2.8659856987410392e-06
         children [
           Transform {
-            translation -0.002 -0.002 -0.01
+            translation -0.002 -0.002 0
             children [
               Shape {
                 appearance PBRAppearance {
@@ -476,12 +454,15 @@ Robot {
           density -1
           mass 0.004
         }
+        linearVelocity -2.3101703829422893e-08 -4.067844714961133e-07 1.1266996148041886e-07
+        angularVelocity 4.1731858032922505e-06 4.485863635150581e-09 4.7356299173599795e-07
       }
     }
     HingeJoint {
       jointParameters HingeJointParameters {
+        position 2.306227152190172e-06
         axis 0 0 -1
-        anchor 0 0 -0.015
+        anchor 0 0 0.01
       }
       device [
         RotationalMotor {
@@ -490,8 +471,8 @@ Robot {
         }
       ]
       endPoint Solid {
-        translation 0 0 -0.014999999999999994
-        rotation 0 0 -1 0
+        translation 0 0 -0.019999999999999622
+        rotation 0 0 -1 2.306168332356712e-06
         children [
           Transform {
             translation -0.002 -0.002 0
@@ -538,6 +519,8 @@ Robot {
           density -1
           mass 0.004
         }
+        linearVelocity -3.4526090094549877e-09 5.56227619907812e-07 1.23730907714871e-07
+        angularVelocity 4.175101252059614e-06 4.2101231452910424e-09 4.723859650027656e-07
       }
     }
     Shape {
@@ -566,14 +549,23 @@ Robot {
   ]
   name ""
   boundingObject Transform {
-    translation 0.01 0.05 0.11
+    translation -0.04 0.05 0.12
     children [
-      Box {
-        size 0.09 0.05 0.2
+      Shape {
+        appearance PBRAppearance {
+          roughness 1
+          metalness 0
+          name "DefaultMaterial"
+        }
+        geometry Box {
+          size 0.2 0.08 0.2
+        }
       }
     ]
   }
   physics Physics {
   }
   controller "lineFolowing"
+  linearVelocity -3.606069176426499e-08 -7.729281948574103e-08 3.173214277633595e-07
+  angularVelocity 4.171891763460167e-06 4.480929993742635e-09 4.7302925595788954e-07
 }
