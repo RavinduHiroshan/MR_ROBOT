@@ -12,7 +12,7 @@
 #include <webots/Motor.hpp>
 #include <webots/DistanceSensor.hpp>
 
-#define TIME_STEP 32
+#define TIME_STEP 16
 #define MAX_SPEED 6.28
 
 #define LEFT 0
