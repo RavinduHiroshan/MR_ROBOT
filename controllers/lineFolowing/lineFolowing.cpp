@@ -20,13 +20,23 @@
 // 8 IR ground color sensors
 #define NB_GROUND_SENS 8
 // 520
-#define MAX_GS 520 
+#define MAX_GS 900 
 // 110
-#define MIN_GS 110 
+#define MIN_GS 600 
 #define NEW_GS 1000
 
 // Overlap factor
 #define OL 200
+
+int lfm_speed[2];
+
+long P=0, I=0, D=0, pErr=0, PID=0;
+float Kp=0.80; // 0.80
+float Ki=0.00; // 0.00
+float Kd=0.02; // 0.02
+
+
+#define LFM_FS 1000 //2000
 
 // All the webots classes are defined in the "webots" namespace
 using namespace webots;
@@ -76,6 +86,21 @@ void ReadGroudSensors(void){
   else Position = NEW_GS*(NB_GROUND_SENS-1); // Right Sensor Memory Position
 
 }
+
+void LineFollowingModule(void) {
+  // Error Position Calculation & PID
+  P = Position - NEW_GS*(NB_GROUND_SENS-1)/2;
+  I = P + pErr;
+  D = P - pErr;
+
+  PID = Kp*P + Ki*I + Kd*D;
+  
+  pErr = P;
+ 
+  lfm_speed[LEFT] = LFM_FS + PID;
+  lfm_speed[RIGHT] = LFM_FS - PID;
+
+}
 // This is the main program of your controller.
 // It creates an instance of your Robot instance, launches its
 // function(s) and destroys it at the end of the execution.
@@ -87,6 +112,7 @@ void ReadGroudSensors(void){
 int main(int argc, char **argv) {
   // create the Robot instance.
   Robot *robot = new Robot();
+  int speed[2];
   
 
   // get the time step of the current world.
@@ -108,8 +134,8 @@ int main(int argc, char **argv) {
   Motor *rightMotor = robot->getMotor("right_wheel");
   leftMotor->setPosition(INFINITY);
   rightMotor->setPosition(INFINITY);
-  leftMotor->setVelocity(30.0);
-  rightMotor->setVelocity(30.0);
+  leftMotor->setVelocity(0.0);
+  rightMotor->setVelocity(0.0);
   
   // Main loop:
   // - perform simulation steps until Webots is stopping the controller
@@ -121,9 +147,34 @@ int main(int argc, char **argv) {
     // read sensors outputs
     
     // Process sensor data here.
+    ReadGroudSensors();
+      
+    // Speed initialization
 
+    speed[LEFT] = 0;
+    speed[RIGHT] = 0;
+
+    // *** START OF SUBSUMPTION ARCHITECTURE ***
+
+    // LFM - Line Following Module
+    LineFollowingModule();
+    speed[LEFT] = lfm_speed[LEFT];
+    speed[RIGHT] = lfm_speed[RIGHT];
+    // Routines used when detecting the line
+    if(!online){
+      if(P == -NEW_GS*(NB_GROUND_SENS-1)/2){
+        speed[LEFT] = -LFM_FS;
+        speed[RIGHT] = LFM_FS;
+      }
+      if(P == NEW_GS*(NB_GROUND_SENS-1)/2){
+        speed[LEFT] = LFM_FS;
+        speed[RIGHT] = -LFM_FS;
+      }
+    }
     // Enter here functions to send actuator commands, like:
     //  motor->setPosition(10.0);
+    leftMotor->setVelocity(0.00628 * speed[LEFT]);
+    rightMotor->setVelocity(0.00628 * speed[RIGHT]);
     std::cout <<  gsNew[0]<<"  "<<gsNew[1]<<"  "<<gsNew[2]<<" "<<gsNew[3]<<"  "<<gsNew[4]<<"  "<<gsNew[5]<<"  "<<gsNew[6]<<"  "<<gsNew[7]<<std::endl;
   };
 
