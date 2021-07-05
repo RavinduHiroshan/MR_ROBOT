@@ -111,7 +111,7 @@ void LineFollowingModule(void) {
 int main(int argc, char **argv) {
   // create the Robot instance.
   Robot *robot = new Robot();
-  int speed[2];
+  //int speed[2];
   
 
   // get the time step of the current world.
@@ -124,57 +124,75 @@ int main(int argc, char **argv) {
   //  ds->enable(timeStep);
   
   // initialize devices
-  for (int i = 0; i < 8; i++) {
-    gs[i] = robot->getDistanceSensor(gsNames[i]);
-    gs[i]->enable(TIME_STEP);
-  }
+  // for (int i = 0; i < 8; i++) {
+    // gs[i] = robot->getDistanceSensor(gsNames[i]);
+    // gs[i]->enable(TIME_STEP);
+  // }
   
-  Motor *leftMotor = robot->getMotor("left_wheel");
-  Motor *rightMotor = robot->getMotor("right_wheel");
-  leftMotor->setPosition(INFINITY);
-  rightMotor->setPosition(INFINITY);
-  leftMotor->setVelocity(0.0);
-  rightMotor->setVelocity(0.0);
-  
+ // Motor *leftMotor = robot->getMotor("left_wheel");
+  //Motor *rightMotor = robot->getMotor("right_wheel");
+  Motor *left_grip = robot->getMotor("leftGrip");
+  Motor *right_grip = robot->getMotor("rightrip");
+  Motor *main_grip = robot->getMotor("mainArm");
+  Motor *second_grip = robot->getMotor("secondArm");
+  main_grip->setPosition(-1.4);
+  second_grip->setPosition(2);
+  //leftMotor->setPosition(INFINITY);
+  //rightMotor->setPosition(INFINITY);
+  //leftMotor->setVelocity(0.0);
+  //rightMotor->setVelocity(0.0);
+  double leftGrip = 0.0;
+  double rightGrip = 0.0;
+  double mainArm = -1.4;
   // Main loop:
   // - perform simulation steps until Webots is stopping the controller
   while (robot->step(timeStep) != -1) {
-    ReadGroudSensors();
+    //ReadGroudSensors();
     // Read the sensors:
     // Enter here functions to read sensor data, like:
     //  double val = ds->getValue();
     // read sensors outputs
     
     // Process sensor data here.
-    ReadGroudSensors();
       
     // Speed initialization
 
-    speed[LEFT] = 0;
-    speed[RIGHT] = 0;
+    //speed[LEFT] = 0;
+    //speed[RIGHT] = 0;
 
     // *** START OF SUBSUMPTION ARCHITECTURE ***
-
-    // LFM - Line Following Module
-    LineFollowingModule();
-    speed[LEFT] = lfm_speed[LEFT];
-    speed[RIGHT] = lfm_speed[RIGHT];
-    // Routines used when detecting the line
-    if(!online){
-      if(P == -NEW_GS*(NB_GROUND_SENS-1)/2){
-        speed[LEFT] = -LFM_FS;
-        speed[RIGHT] = LFM_FS;
-      }
-      if(P == NEW_GS*(NB_GROUND_SENS-1)/2){
-        speed[LEFT] = LFM_FS;
-        speed[RIGHT] = -LFM_FS;
-      }
+    if (leftGrip < 0.3){
+      leftGrip += 0.005;
     }
+    left_grip->setPosition(leftGrip);
+    if (rightGrip < 0.3){
+      rightGrip += 0.005;
+    }
+    right_grip->setPosition(leftGrip);
+    if ((leftGrip >= 0.3) && (rightGrip >= 0.3) && (mainArm<0)){
+      mainArm+=0.005;
+    }
+    main_grip->setPosition(mainArm);
+    // LFM - Line Following Module
+    // LineFollowingModule();
+    // speed[LEFT] = lfm_speed[LEFT];
+    // speed[RIGHT] = lfm_speed[RIGHT];
+    //Routines used when detecting the line
+    // if(!online){
+      // if(P == -NEW_GS*(NB_GROUND_SENS-1)/2){
+        // speed[LEFT] = -LFM_FS;
+        // speed[RIGHT] = LFM_FS;
+      // }
+      // if(P == NEW_GS*(NB_GROUND_SENS-1)/2){
+        // speed[LEFT] = LFM_FS;
+        // speed[RIGHT] = -LFM_FS;
+      // }
+    // }
     // Enter here functions to send actuator commands, like:
     //  motor->setPosition(10.0);
-    leftMotor->setVelocity(0.00628 * speed[LEFT]);
-    rightMotor->setVelocity(0.00628 * speed[RIGHT]);
-    std::cout <<  gsNew[0]<<"  "<<gsNew[1]<<"  "<<gsNew[2]<<" "<<gsNew[3]<<"  "<<gsNew[4]<<"  "<<gsNew[5]<<"  "<<gsNew[6]<<"  "<<gsNew[7]<<std::endl;
+    //leftMotor->setVelocity(0.00628 * speed[LEFT]);
+    //rightMotor->setVelocity(0.00628 * speed[RIGHT]);
+    //std::cout <<  gsNew[0]<<"  "<<gsNew[1]<<"  "<<gsNew[2]<<" "<<gsNew[3]<<"  "<<gsNew[4]<<"  "<<gsNew[5]<<"  "<<gsNew[6]<<"  "<<gsNew[7]<<std::endl;
   };
 
   // Enter here exit cleanup code.

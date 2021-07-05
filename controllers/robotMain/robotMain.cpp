@@ -1,7 +1,7 @@
 // File:          lineFolowing.cpp
 // Date:6/27/2020
 // Description: Code for only line following
-// Author: Group
+// Author: Hiroshan
 // Modifications: null
 
 // You may need to add webots include files such as
