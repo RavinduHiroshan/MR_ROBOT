@@ -1,0 +1,91 @@
+#VRML_SIM R2021a utf8
+WorldInfo {
+  info [
+    "Example world demonstrating the use of a controlled Hinge2Joint."
+  ]
+  title "Motor 2"
+  coordinateSystem "NUE"
+  lineScale 0.3
+}
+Viewpoint {
+  orientation 0.016376672171322586 -0.9961120116824994 -0.08656018016638622 3.330921531309042
+  position -0.05021880969819788 0.1968225623681137 -0.6141134705148356
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+RectangleArena {
+  floorAppearance ThreadMetalPlate {
+    textureTransform TextureTransform {
+      scale 2 2
+    }
+  }
+}
+Robot {
+  rotation -4.0860359538392456e-10 1 -4.049215911462979e-10 -1.566350737106491
+  children [
+    Transform {
+      children [
+        DEF Mechasnism Solid {
+          translation 4.397257670150763e-17 0.024976479310928154 1.9092238184211727e-14
+          rotation 1 -4.9023659564595705e-17 2.356076978374494e-16 1.5699999999999996
+          children [
+            DEF supportBAr Shape {
+              appearance BrushedAluminium {
+                colorOverride 0 0 0
+                textureTransform TextureTransform {
+                  rotation 1.5708
+                }
+              }
+              geometry Box {
+                size 0.05 0.05 0.05
+              }
+            }
+            Hinge2Joint {
+              jointParameters HingeJointParameters {
+                axis 0 0 1
+                anchor 0 0.03 0
+              }
+              jointParameters2 JointParameters {
+                axis 1 0 0
+              }
+              device [
+                RotationalMotor {
+                  name "motor 1"
+                  maxVelocity 1
+                }
+              ]
+              device2 [
+                RotationalMotor {
+                  name "motor 2"
+                  maxVelocity 1
+                }
+              ]
+              endPoint Solid {
+                translation -0.03 0.2 -0.005
+                children [
+                  Shape {
+                    appearance PBRAppearance {
+                      baseColor 1 0 0
+                      metalness 0
+                    }
+                    geometry Box {
+                      size 0.01 0.4 0.01
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+          name "solid(4)"
+          boundingObject USE supportBAr
+          physics Physics {
+          }
+        }
+      ]
+    }
+  ]
+  name "robot(3)"
+  controller "servoTest2"
+}
